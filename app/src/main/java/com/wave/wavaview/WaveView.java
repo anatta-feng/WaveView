@@ -122,7 +122,7 @@ public class WaveView extends View {
 
     private void setWaveColor(int color) {
         mWaveColor = color;
-        mWavePaint.setColor(color);
+        mCenterPaint.setColor(color);
     }
 
     @Override
