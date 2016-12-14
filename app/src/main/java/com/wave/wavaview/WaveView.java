@@ -21,7 +21,7 @@ public class WaveView extends View {
     /**
      * 多少毫秒刷新一帧
      */
-    private long time = 25;
+    private long time = 1;
     /**
      * View 中心坐标
      */
@@ -30,7 +30,7 @@ public class WaveView extends View {
     /**
      * 中心圆形半径
      */
-    private float centerRadius = 20f;
+    private float centerRadius = 50f;
     /**
      * 水波间距
      */
@@ -38,8 +38,8 @@ public class WaveView extends View {
     /**
      * 水波起始与结束的宽度
      */
-    private float mWaveStartWidth;
-    private float mWaveEndWidth;
+    private float mWaveStartWidth = centerRadius * 0.27f;
+    private float mWaveEndWidth = mWaveStartWidth * 0.625f;
     /**
      * 波形速度
      */
@@ -91,22 +91,18 @@ public class WaveView extends View {
     }
 
     private void init() {
-        initWaveInfo(0.8f, 30f, 8f, 5f, Color.WHITE);
+        initWaveInfo(0.8f, 30f, Color.WHITE);
     }
 
     /**
      * 初始化波形属性
      * @param mWaveSpeed            波形移动速度
      * @param mWaveDistance         波形间距
-     * @param mWaveStartWidth       波形起始宽度
-     * @param mWaveEndWidth         波形结束宽度
      * @param color                 波形颜色
      */
-    private void initWaveInfo(float mWaveSpeed, float mWaveDistance, float mWaveStartWidth, float mWaveEndWidth, int color) {
+    private void initWaveInfo(float mWaveSpeed, float mWaveDistance, int color) {
         this.mWaveSpeed = mWaveSpeed;
         this.mWaveDistance = mWaveDistance;
-        this.mWaveStartWidth = mWaveStartWidth;
-        this.mWaveEndWidth = mWaveEndWidth;
         setWaveColor(color);
         // 每次初始化波形时候要重置波形
         resetWave();
@@ -140,6 +136,27 @@ public class WaveView extends View {
             viewMaxRadius = waveAreaRadius;
             resetWave();
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int width, height;
+        if (widthMode == MeasureSpec.EXACTLY) {
+            width = widthSize;
+        } else {
+            width = (int) (centerRadius * 2 + mWaveStartWidth * 2);
+        }
+        if (heightMode == MeasureSpec.EXACTLY) {
+            height = heightSize;
+        } else {
+            height = (int) (centerRadius * 2 + mWaveStartWidth * 2);
+        }
+        setMeasuredDimension(width, height);
     }
 
     @Override
@@ -211,5 +228,9 @@ public class WaveView extends View {
 
     public void setRefreshTime(long time) {
         this.time = time;
+    }
+
+    public void setWaveSpeed(float mWaveSpeed) {
+        this.mWaveSpeed = mWaveSpeed;
     }
 }
